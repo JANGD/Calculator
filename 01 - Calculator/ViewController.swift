@@ -8,18 +8,64 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+class ViewController: UIViewController
+{
+    var UserIsInMiddleOfTypeANumber:Bool = false
+    var brain = CalculatorBrain()
+    @IBOutlet weak var display: UILabel!
+    
+    @IBAction func digit(sender: UIButton) {
+        let digit = sender.currentTitle
+        if UserIsInMiddleOfTypeANumber {
+            display.text = (display.text)! + digit!
+        }else
+        {
+            display.text = digit
+            UserIsInMiddleOfTypeANumber = true
+        }
+        
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    var operandStack = Array<Double>()
+    @IBAction func enter() {
+        UserIsInMiddleOfTypeANumber = false
+        if let result = brain.pushOperand(displayValue){
+            displayValue = result
+        }else{
+            displayValue = 0
+        }
     }
-
-
+    @IBAction func operate(sender: UIButton) {
+        if UserIsInMiddleOfTypeANumber {
+            enter()
+        }
+        if let operation = sender.currentTitle{
+            if let result = brain.performOperation(operation){
+                displayValue = result
+            }else{
+                displayValue = 0
+            }
+        }
+        
+    }
+    func performOperation1(operation1:(Double,Double)->Double){
+        if operandStack.count >= 2 {
+            displayValue = operation1(operandStack.removeLast(),operandStack.removeLast())
+        }
+    }
+    func performOperation2(operation2:Double->Double){
+        if operandStack.count >= 1{
+            displayValue = operation2(operandStack.removeLast())
+            enter()
+        }
+    }
+    var displayValue:Double{
+        get{
+            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+        }
+        set{
+            display.text = "\(newValue)"
+            UserIsInMiddleOfTypeANumber = false
+        }
+    }
 }
 
