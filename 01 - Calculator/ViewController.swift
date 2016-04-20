@@ -34,6 +34,7 @@ class ViewController: UIViewController
             displayValue = 0
         }
     }
+    //计算
     @IBAction func operate(sender: UIButton) {
         if UserIsInMiddleOfTypeANumber {
             enter()
