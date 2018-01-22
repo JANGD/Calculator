@@ -12,7 +12,7 @@ class CalculatorBrain
 {
   private enum Op{
         case Operand(Double)
-        case UnaryOperation(String,Double->Double)
+    case UnaryOperation(String,(Double)->Double)
         case BinaryOperation(String,(Double,Double)->Double)
     }
    private var opStack = [Op]()
@@ -37,7 +37,7 @@ class CalculatorBrain
                 
             case .UnaryOperation(_, let operation):
                 
-                let operantEvaluate = evaluate(remainingOps)
+                let operantEvaluate = evaluate(ops: remainingOps)
                 
                 if let operand = operantEvaluate.result{
                     
@@ -47,11 +47,12 @@ class CalculatorBrain
                 
             case .BinaryOperation(_, let operation):
                 
-                let op1Evaluation = evaluate(remainingOps)
+                let op1Evaluation = evaluate(ops: remainingOps)
                 
                 if  let operand1 = op1Evaluation.result{
                     
-                    let op2Evaluation = evaluate(op1Evaluation.remainingOps)
+                    let op2Evaluation = evaluate(ops: op1Evaluation.remainingOps)
+                    
                     
                     if let operand2 = op2Evaluation.result {
                         
@@ -66,7 +67,7 @@ class CalculatorBrain
 
     func evaluate() ->Double? {
         
-        let (result,_) = evaluate(opStack)
+        let (result,_) = evaluate(ops: opStack)
         
         return result
     }

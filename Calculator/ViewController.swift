@@ -28,7 +28,7 @@ class ViewController: UIViewController
     var operandStack = Array<Double>()
     @IBAction func enter() {
         UserIsInMiddleOfTypeANumber = false
-        if let result = brain.pushOperand(displayValue){
+        if let result = brain.pushOperand(operand: displayValue){
             displayValue = result
         }else{
             displayValue = 0
@@ -40,7 +40,7 @@ class ViewController: UIViewController
             enter()
         }
         if let operation = sender.currentTitle{
-            if let result = brain.performOperation(operation){
+            if let result = brain.performOperation(symbol: operation){
                 displayValue = result
             }else{
                 displayValue = 0
@@ -53,7 +53,7 @@ class ViewController: UIViewController
             displayValue = operation1(operandStack.removeLast(),operandStack.removeLast())
         }
     }
-    func performOperation2(operation2:Double->Double){
+    func performOperation2(operation2:(Double)->Double){
         if operandStack.count >= 1{
             displayValue = operation2(operandStack.removeLast())
             enter()
@@ -61,7 +61,7 @@ class ViewController: UIViewController
     }
     var displayValue:Double{
         get{
-            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            return NumberFormatter().number(from: display.text!)!.doubleValue
         }
         set{
             display.text = "\(newValue)"
